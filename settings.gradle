@@ -1,0 +1,12 @@
+rootProject.name = 'file'
+
+include 'modules:common'
+include 'modules:adapters'
+include 'modules:api'
+include 'modules:application'
+include 'modules:domain'
+include 'modules:adapters:in:web'
+include 'modules:adapters:out:id-gen'
+include 'modules:adapters:out:persistence'
+include 'modules:infrastructure'
+include 'modules:test-support'
