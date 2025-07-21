@@ -1,19 +1,4 @@
-plugins {
-    id 'java'
-}
-
-group = 'com.hoo'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-test {
-    useJUnitPlatform()
+    implementation project(":modules:domain")
+    implementation "com.github.f4b6a3:uuid-creator:6.1.1"
 }

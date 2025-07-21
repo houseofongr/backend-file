@@ -1,19 +1,8 @@
-plugins {
-    id 'java'
-}
-
-group = 'com.hoo'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    api project(":modules:domain")
 }
 
 test {
     useJUnitPlatform()
+    outputs.upToDateWhen { false }
 }
