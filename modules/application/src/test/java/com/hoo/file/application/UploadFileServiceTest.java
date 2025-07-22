@@ -4,8 +4,10 @@ import com.github.f4b6a3.uuid.UuidCreator;
 import com.hoo.common.IssueIDPort;
 import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
+import com.hoo.file.api.out.GenerateUrlPort;
 import com.hoo.file.api.out.HandleFileEventPort;
 import com.hoo.file.api.out.StoreFilePort;
+import com.hoo.file.domain.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +22,9 @@ class UploadFileServiceTest {
     StorageProperties storageProperties = new StorageProperties("http://localhost:8080", new StorageProperties.Buckets("media", "document", "log", "backup"), "access", "secret", 5 * 1024 * 1024L);
     HandleFileEventPort handleFileEventPort = mock();
     StoreFilePort storeFilePort = mock();
+    GenerateUrlPort generateUrlPort= mock();
 
-    UploadFileService sut = new UploadFileService(issueIDPort, storageProperties, handleFileEventPort, storeFilePort);
+    UploadFileService sut = new UploadFileService(issueIDPort, storageProperties, handleFileEventPort, storeFilePort, generateUrlPort);
 
     @Test
     @DisplayName("파일 업로드 서비스")
@@ -41,6 +44,7 @@ class UploadFileServiceTest {
         // then
         verify(handleFileEventPort, times(1)).handleCreateFile(any());
         verify(storeFilePort, times(1)).storeFile(any());
+        verify(generateUrlPort, times(1)).generatePublicUrl((File) any());
     }
 
 }

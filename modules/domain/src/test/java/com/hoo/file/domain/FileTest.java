@@ -26,7 +26,7 @@ class FileTest {
         FileCreateEvent event = File.createFile(
                 new File.FileID(fileID),
                 1000L, "realName.png",
-                "http://localhost:8080", "media", "/images",
+                "media", "/images",
                 "image/png",
                 UuidCreator.getTimeOrderedEpoch(), AccessLevel.PUBLIC
         );
@@ -38,7 +38,7 @@ class FileTest {
         assertThat(newFile.getFileDescriptor().status()).isEqualTo(FileStatus.CREATED);
         assertThat(newFile.getFileDescriptor().createdTime()).isAfter(now);
         assertThat(newFile.getFileDescriptor().updatedTime()).isAfter(now);
-        assertThat(newFile.getMediaInfo().mediaType()).isEqualTo(MediaType.IMAGE);
+        assertThat(newFile.getMediaInfo().mediaType()).isEqualTo(MediaType.IMAGES);
         assertThat(newFile.getMediaInfo().contentType()).isEqualTo("image/png");
         assertThat(newFile.getAccessControlInfo().accessLevel()).isEqualTo(AccessLevel.PUBLIC);
         assertThat(newFile.getLocation().bucket()).isEqualTo("media");

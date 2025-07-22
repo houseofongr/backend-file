@@ -28,7 +28,8 @@ public enum AdapterErrorCode implements ErrorCode {
 
     FILE_NOT_FOUND("FILE-PERSISTENCE-300", NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
     
-    UPLOAD_FAILED("FILE-STORAGE-500", INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+    UPLOAD_FAILED("FILE-STORAGE-500", INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
+    GENERATE_URL_FAILED("FILE-STORAGE-501", INTERNAL_SERVER_ERROR, "파일 URL 생성에 실패했습니다.");
 
     private final String code;
     private final HttpStatus status;

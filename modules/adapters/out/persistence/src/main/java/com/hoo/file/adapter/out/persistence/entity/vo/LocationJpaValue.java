@@ -19,12 +19,16 @@ public class LocationJpaValue {
     private String bucket;
 
     @Column
+    private String domain;
+
+    @Column
     private String storageKey;
 
     public static LocationJpaValue from(Location location) {
 
         return new LocationJpaValue(
                 location.bucket(),
+                location.domain(),
                 location.storageKey()
         );
     }

@@ -3,7 +3,10 @@ package com.hoo.file.domain;
 import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.enums.FileStatus;
 import com.hoo.file.domain.event.FileCreateEvent;
-import com.hoo.file.domain.vo.*;
+import com.hoo.file.domain.vo.AccessControlInfo;
+import com.hoo.file.domain.vo.FileDescriptor;
+import com.hoo.file.domain.vo.Location;
+import com.hoo.file.domain.vo.MediaInfo;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +28,7 @@ public class File {
 
     public static FileCreateEvent createFile(FileID fileID,
                                              Long size, String realName,
-                                             String endpoint, String bucket, String domain,
+                                             String bucket, String domain,
                                              String contentType,
                                              UUID ownerID, AccessLevel accessLevel
     ) {
@@ -41,12 +44,24 @@ public class File {
         ));
     }
 
+    public static File load(FileID fileID, FileDescriptor fileDescriptor, Location location, MediaInfo mediaInfo, AccessControlInfo accessControlInfo) {
+        return new File(fileID, fileDescriptor, location, mediaInfo, accessControlInfo, null);
+    }
+
     public void addInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 
-    public String getLocationUrl() {
+    public String getBucketIncludedUrl() {
         return location.url();
+    }
+
+    public String getUrl() {
+        return location.storageKey();
+    }
+
+    public String getDomain() {
+        return location.domain();
     }
 
     public record FileID(UUID uuid) {

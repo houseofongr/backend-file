@@ -12,7 +12,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class PersistenceAdapterConfig {
 
     @Bean
+    public LoadFileAdapter loadFileAdapter(FileJpaRepository fileJpaRepository, PersistenceMapper persistenceMapper) {
+        return new LoadFileAdapter(fileJpaRepository, persistenceMapper);
+    }
+
+    @Bean
     public HandleFileEventAdapter handleFileEventAdapter(FileJpaRepository fileJpaRepository) {
         return new HandleFileEventAdapter(fileJpaRepository);
+    }
+
+    @Bean
+    public PersistenceMapper persistenceMapper() {
+        return new PersistenceMapper();
     }
 }

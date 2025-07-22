@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AccessControlInfoJpaValue {
 
-    @Column(columnDefinition = "BINARY(16)", nullable = false, unique = true, name = "OWNER_ID")
+    @Column(columnDefinition = "BINARY(16)", name = "OWNER_ID")
     private UUID ownerID;
 
     @Column

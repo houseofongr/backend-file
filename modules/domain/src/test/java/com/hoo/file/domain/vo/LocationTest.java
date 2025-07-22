@@ -6,7 +6,6 @@ import com.hoo.file.domain.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,13 +20,13 @@ class LocationTest {
 
         String bucket = "media-files";
         String domain = "user";
-        MediaType mediaType = MediaType.IMAGE;
+        MediaType mediaType = MediaType.IMAGES;
         String realName = "photo.JPG";
 
         Location location = Location.of(bucket, domain, mediaType, fileID, realName);
 
         assertThat(location.bucket()).isEqualTo(bucket);
-        assertThat(location.storageKey()).isEqualTo("user/image/" + fileUuid + ".jpg");
+        assertThat(location.storageKey()).isEqualTo("user/images/" + fileUuid + ".jpg");
     }
 
     @Test
@@ -36,9 +35,9 @@ class LocationTest {
         UUID fileUuid = UuidCreator.getTimeOrderedEpoch();
         File.FileID fileID = new File.FileID(fileUuid);
 
-        Location location = Location.of("media-files", "post", MediaType.VIDEO, fileID, "no_ext");
+        Location location = Location.of("media-files", "post", MediaType.VIDEOS, fileID, "no_ext");
 
-        assertThat(location.storageKey()).isEqualTo("post/video/" + fileUuid);
+        assertThat(location.storageKey()).isEqualTo("post/videos/" + fileUuid);
     }
 
     @Test
@@ -47,9 +46,9 @@ class LocationTest {
         UUID fileUuid = UuidCreator.getTimeOrderedEpoch();
         File.FileID fileID = new File.FileID(fileUuid);
 
-        Location location = Location.of("media-files", "chat", MediaType.AUDIO, fileID, "sound.mp3");
+        Location location = Location.of("media-files", "chat", MediaType.AUDIOS, fileID, "sound.mp3");
 
-        assertThat(location.storageKey()).isEqualTo("chat/audio/" + fileUuid + ".mp3");
+        assertThat(location.storageKey()).isEqualTo("chat/audios/" + fileUuid + ".mp3");
     }
 
     @Test
@@ -58,9 +57,9 @@ class LocationTest {
         UUID fileUuid = UuidCreator.getTimeOrderedEpoch();
         File.FileID fileID = new File.FileID(fileUuid);
 
-        Location location = Location.of("backup-files", "", MediaType.DOCUMENT, fileID, "report.pdf");
+        Location location = Location.of("backup-files", "", MediaType.DOCUMENTS, fileID, "report.pdf");
 
-        assertThat(location.storageKey()).isEqualTo("default/document/" + fileUuid + ".pdf");
+        assertThat(location.storageKey()).isEqualTo("default/documents/" + fileUuid + ".pdf");
     }
 
     @Test
@@ -69,8 +68,8 @@ class LocationTest {
         UUID fileUuid = UuidCreator.getTimeOrderedEpoch();
         File.FileID fileID = new File.FileID(fileUuid);
 
-        Location location = Location.of("documents", "team", MediaType.DOCUMENT, fileID, "final.DOCX");
+        Location location = Location.of("documents", "team", MediaType.DOCUMENTS, fileID, "final.DOCX");
 
-        assertThat(location.storageKey()).isEqualTo("team/document/" + fileUuid + ".docx");
+        assertThat(location.storageKey()).isEqualTo("team/documents/" + fileUuid + ".docx");
     }
 }

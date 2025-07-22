@@ -3,14 +3,13 @@ package com.hoo.file.domain.vo;
 import com.hoo.common.enums.MediaType;
 import com.hoo.file.domain.File;
 
-import java.net.URI;
-
 public record Location(
         String bucket,
+        String domain,
         String storageKey
 ) {
     public static Location of(String bucket, String domain, MediaType mediaType, File.FileID fileID, String realName) {
-        return new Location(bucket, createStorageKey(domain, mediaType, fileID, realName));
+        return new Location(bucket, domain, createStorageKey(domain, mediaType, fileID, realName));
     }
 
     private static String midpoint(String domain, MediaType mediaType) {

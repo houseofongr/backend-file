@@ -8,7 +8,9 @@ public record StorageProperties(
         Buckets bucket,
         String accessKey,
         String secretKey,
-        Long partSize
+        Long partSize,
+        Integer publicUrlExpireMin,
+        Integer privateUrlExpireMin
 ) {
     public record Buckets(
             String media,

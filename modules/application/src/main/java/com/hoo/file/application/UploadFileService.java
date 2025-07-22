@@ -1,9 +1,12 @@
 package com.hoo.file.application;
 
 import com.hoo.common.IssueIDPort;
+import com.hoo.common.enums.AccessLevel;
+import com.hoo.common.internal.api.file.GetFileInfoAPI;
 import com.hoo.common.internal.api.file.UploadFileAPI;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
 import com.hoo.common.internal.api.file.dto.UploadFileResult;
+import com.hoo.file.api.out.GenerateUrlPort;
 import com.hoo.file.api.out.HandleFileEventPort;
 import com.hoo.file.api.out.StoreFilePort;
 import com.hoo.file.application.exception.ApplicationErrorCode;
@@ -27,6 +30,7 @@ public class UploadFileService implements UploadFileAPI {
     private final StorageProperties storageProperties;
     private final HandleFileEventPort handleFileEventPort;
     private final StoreFilePort storeFilePort;
+    private final GenerateUrlPort generateUrlPort;
 
     @Override
     public UploadFileResult uploadFile(UploadFileCommand request) {
@@ -38,7 +42,6 @@ public class UploadFileService implements UploadFileAPI {
                 new File.FileID(fileID),
                 request.fileSource().size(),
                 request.fileSource().name(),
-                storageProperties.endpoint(),
                 bucket,
                 request.metadata().domain(),
                 request.fileSource().contentType(),
@@ -47,24 +50,25 @@ public class UploadFileService implements UploadFileAPI {
         );
 
         File file = event.newFile();
+        file.addInputStream(request.fileSource().inputStream());
 
         handleFileEventPort.handleCreateFile(event);
         storeFilePort.storeFile(file);
 
-        return new UploadFileResult(
-                file.getId().uuid(),
-                URI.create(storageProperties.endpoint() + "/" + file.getLocationUrl()),
-                file.getFileDescriptor().createdTime().toEpochSecond()
+        URI url = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC)?
+                generateUrlPort.generatePublicUrl(file) : generateUrlPort.generatePrivateUrl(file);
+
+        return new UploadFileResult(file.getId().uuid(), url, file.getFileDescriptor().createdTime().toEpochSecond()
         );
     }
 
     private String getBucketByContentType(String contentType) {
 
         switch (MediaInfo.of(contentType).mediaType()) {
-            case DOCUMENT -> {
+            case DOCUMENTS -> {
                 return storageProperties.bucket().document();
             }
-            case IMAGE, AUDIO, VIDEO -> {
+            case IMAGES, AUDIOS, VIDEOS -> {
                 return storageProperties.bucket().media();
             }
             default -> throw new FileApplicationException(ApplicationErrorCode.NOT_SUPPORTED_MEDIA_TYPE);

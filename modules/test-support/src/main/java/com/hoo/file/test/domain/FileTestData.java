@@ -65,7 +65,7 @@ public class FileTestData {
         }
 
         public File build() {
-            return File.createFile(id, size, realName, endpoint, bucket, midpoint, contentType, ownerID, accessLevel).newFile();
+            return File.createFile(id, size, realName, bucket, midpoint, contentType, ownerID, accessLevel).newFile();
         }
     }
 }
