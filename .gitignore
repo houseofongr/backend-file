@@ -33,6 +33,8 @@ bin/
 .DS_Store
 
 ### config ###
-config/**
+/config
+/config/**
 *config*.yml
 !config/application*.yml
+.env

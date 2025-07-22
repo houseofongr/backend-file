@@ -8,8 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.net.URI;
-import java.time.ZonedDateTime;
+import java.io.InputStream;
 import java.util.UUID;
 
 @Getter
@@ -22,20 +21,32 @@ public class File {
     private final Location location;
     private final MediaInfo mediaInfo;
     private final AccessControlInfo accessControlInfo;
+    private InputStream inputStream;
 
     public static FileCreateEvent createFile(FileID fileID,
                                              Long size, String realName,
-                                             String endpoint, Bucket bucket, String midpoint,
+                                             String endpoint, String bucket, String domain,
                                              String contentType,
                                              UUID ownerID, AccessLevel accessLevel
     ) {
+
+        MediaInfo media = MediaInfo.of(contentType);
         return new FileCreateEvent(new File(
                 fileID,
-                new FileDescriptor(size, realName, FileStatus.CREATED, ZonedDateTime.now(), ZonedDateTime.now()),
-                new Location(URI.create(endpoint), bucket, Location.createStorageKey(fileID, midpoint, realName)),
-                MediaInfo.of(contentType),
-                new AccessControlInfo(ownerID, accessLevel)
+                FileDescriptor.of(size, realName, FileStatus.CREATED),
+                Location.of(bucket, domain, media.mediaType(), fileID, realName),
+                media,
+                new AccessControlInfo(ownerID, accessLevel),
+                null
         ));
+    }
+
+    public void addInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public String getLocationUrl() {
+        return location.url();
     }
 
     public record FileID(UUID uuid) {

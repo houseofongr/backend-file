@@ -10,17 +10,13 @@ import java.util.UUID;
 
 public class FileTestData {
 
-    public static FileBuilder defaultFileWithoutLocation() {
+    public static FileBuilder defaultFile() {
         return new FileBuilder()
                 .withId(new FileID(UuidCreator.getTimeOrderedEpoch()))
                 .withDescriptor(1000L, "realName.png")
-                .withLocation("http://localhost:8080", Bucket.PUBLIC_MEDIA_FILES, "/images")
+                .withLocation("http://localhost:8080", "media", "/images")
                 .withContentType("image/png")
                 .withAccessControlInfo(UuidCreator.getTimeOrderedEpoch(), AccessLevel.PUBLIC);
-    }
-
-    public static FileBuilder defaultFile() {
-        return defaultFileWithoutLocation();
     }
 
     public static class FileBuilder {
@@ -29,7 +25,7 @@ public class FileTestData {
         private Long size;
 
         private String endpoint;
-        private Bucket bucket;
+        private String bucket;
         private String midpoint;
         private String realName;
 
@@ -50,7 +46,7 @@ public class FileTestData {
             return this;
         }
 
-        public FileBuilder withLocation(String endpoint, Bucket bucket, String midpoint) {
+        public FileBuilder withLocation(String endpoint, String bucket, String midpoint) {
             this.endpoint = endpoint;
             this.bucket = bucket;
             this.midpoint = midpoint;

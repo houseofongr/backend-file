@@ -10,3 +10,5 @@ include 'modules:adapters:out:id-gen'
 include 'modules:adapters:out:persistence'
 include 'modules:infrastructure'
 include 'modules:test-support'
+
+include 'modules:adapters:out:storage'

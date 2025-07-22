@@ -5,7 +5,6 @@ import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.enums.FileStatus;
 import com.hoo.common.enums.MediaType;
 import com.hoo.file.domain.event.FileCreateEvent;
-import com.hoo.file.domain.vo.Bucket;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class FileTest {
         FileCreateEvent event = File.createFile(
                 new File.FileID(fileID),
                 1000L, "realName.png",
-                "http://localhost:8080", Bucket.PUBLIC_MEDIA_FILES, "/images",
+                "http://localhost:8080", "media", "/images",
                 "image/png",
                 UuidCreator.getTimeOrderedEpoch(), AccessLevel.PUBLIC
         );
@@ -42,8 +41,7 @@ class FileTest {
         assertThat(newFile.getMediaInfo().mediaType()).isEqualTo(MediaType.IMAGE);
         assertThat(newFile.getMediaInfo().contentType()).isEqualTo("image/png");
         assertThat(newFile.getAccessControlInfo().accessLevel()).isEqualTo(AccessLevel.PUBLIC);
-        assertThat(newFile.getLocation().bucket()).isEqualTo(Bucket.PUBLIC_MEDIA_FILES);
-        assertThat(newFile.getLocation().endpoint().toString()).isEqualTo("http://localhost:8080");
+        assertThat(newFile.getLocation().bucket()).isEqualTo("media");
         assertThat(newFile.getLocation().storageKey()).contains("/images");
         assertThat(newFile.getLocation().storageKey()).contains(newFile.getId().uuid().toString());
         assertThat(newFile.getLocation().storageKey()).contains(".png");

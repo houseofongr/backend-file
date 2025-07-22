@@ -1,0 +1,73 @@
+package com.hoo.file.application;
+
+import com.hoo.common.IssueIDPort;
+import com.hoo.common.internal.api.file.UploadFileAPI;
+import com.hoo.common.internal.api.file.dto.UploadFileCommand;
+import com.hoo.common.internal.api.file.dto.UploadFileResult;
+import com.hoo.file.api.out.HandleFileEventPort;
+import com.hoo.file.api.out.StoreFilePort;
+import com.hoo.file.application.exception.ApplicationErrorCode;
+import com.hoo.file.application.exception.FileApplicationException;
+import com.hoo.file.domain.File;
+import com.hoo.file.domain.event.FileCreateEvent;
+import com.hoo.file.domain.vo.MediaInfo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URI;
+import java.util.UUID;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class UploadFileService implements UploadFileAPI {
+
+    private final IssueIDPort issueIDPort;
+    private final StorageProperties storageProperties;
+    private final HandleFileEventPort handleFileEventPort;
+    private final StoreFilePort storeFilePort;
+
+    @Override
+    public UploadFileResult uploadFile(UploadFileCommand request) {
+
+        UUID fileID = issueIDPort.issueNewID();
+
+        String bucket = getBucketByContentType(request.fileSource().contentType());
+        FileCreateEvent event = File.createFile(
+                new File.FileID(fileID),
+                request.fileSource().size(),
+                request.fileSource().name(),
+                storageProperties.endpoint(),
+                bucket,
+                request.metadata().domain(),
+                request.fileSource().contentType(),
+                request.metadata().ownerID(),
+                request.metadata().accessLevel()
+        );
+
+        File file = event.newFile();
+
+        handleFileEventPort.handleCreateFile(event);
+        storeFilePort.storeFile(file);
+
+        return new UploadFileResult(
+                file.getId().uuid(),
+                URI.create(storageProperties.endpoint() + "/" + file.getLocationUrl()),
+                file.getFileDescriptor().createdTime().toEpochSecond()
+        );
+    }
+
+    private String getBucketByContentType(String contentType) {
+
+        switch (MediaInfo.of(contentType).mediaType()) {
+            case DOCUMENT -> {
+                return storageProperties.bucket().document();
+            }
+            case IMAGE, AUDIO, VIDEO -> {
+                return storageProperties.bucket().media();
+            }
+            default -> throw new FileApplicationException(ApplicationErrorCode.NOT_SUPPORTED_MEDIA_TYPE);
+        }
+    }
+}

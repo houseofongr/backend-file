@@ -1,17 +1,11 @@
 plugins {
-    id 'java'
-}
-
-group = 'com.hoo'
-version = 'unspecified'
-
-repositories {
-    mavenCentral()
+    id 'org.springframework.boot' version '3.4.1'
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation project(':modules:common')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "com.github.f4b6a3:uuid-creator:6.1.1"
 }
 
 test {
