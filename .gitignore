@@ -32,9 +32,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### config ###
-/config
-/config/**
-*config*.yml
+### env ###
+config/**
 !config/application*.yml
 .env
+.env*
