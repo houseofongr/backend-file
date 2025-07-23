@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class UploadFileServiceTest {
 
     IssueIDPort issueIDPort = mock();
-    StorageProperties storageProperties = new StorageProperties("http://localhost:8080", new StorageProperties.Buckets("media", "document", "log", "backup"), "access", "secret", 5 * 1024 * 1024L);
+    StorageProperties storageProperties = mock();
     HandleFileEventPort handleFileEventPort = mock();
     StoreFilePort storeFilePort = mock();
     GenerateUrlPort generateUrlPort= mock();
@@ -39,6 +39,7 @@ class UploadFileServiceTest {
 
         // when
         when(issueIDPort.issueNewID()).thenReturn(newFileID);
+        when(storageProperties.bucket()).thenReturn(new StorageProperties.Buckets("media", "document", "log", "backup"));
         sut.uploadFile(command);
 
         // then
