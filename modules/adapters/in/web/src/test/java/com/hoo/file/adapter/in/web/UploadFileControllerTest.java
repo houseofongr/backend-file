@@ -57,7 +57,7 @@ class UploadFileControllerTest extends DocumentationTest {
         )))
                 .thenReturn(new UploadFileResult(
                         newFileID,
-                        URI.create("http://localhost:9000/universe/image/" + newFileID + ".png"),
+                        URI.create("https://api.houseofongr.com/files/fbcd947ebb8c3a89"),
                         ZonedDateTime.now().toEpochSecond()
                 ));
 

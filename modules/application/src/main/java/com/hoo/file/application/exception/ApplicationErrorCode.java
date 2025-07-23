@@ -25,8 +25,11 @@ import static org.springframework.http.HttpStatus.*;
 public enum ApplicationErrorCode implements ErrorCode {
 
     NOT_SUPPORTED_MEDIA_TYPE("FILE-APPLICATION-1", BAD_REQUEST, "지원하지 않는 파일 형식입니다."),
+    BAD_FILE_TOKEN_URL("FILE-APPLICATION-2", BAD_REQUEST, "잘못된 파일 토큰 URL 형식입니다."),
 
-    OWNERSHIP_REQUIRED("FILE-APPLICATION-100", UNAUTHORIZED, "소유자 확인이 필요한 파일입니다.");
+    OWNERSHIP_REQUIRED("FILE-APPLICATION-100", UNAUTHORIZED, "소유자 확인이 필요한 파일입니다."),
+
+    FILE_TOKEN_EXPIRED("FILE-APPLICATION-200", FORBIDDEN, "파일 토큰이 만료되었습니다.");
 
     private final String code;
     private final HttpStatus status;

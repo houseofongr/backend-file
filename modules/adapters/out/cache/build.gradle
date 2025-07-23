@@ -1,0 +1,15 @@
+plugins {
+    id 'org.springframework.boot' version '3.4.1'
+}
+
+dependencies {
+    implementation project(":modules:application")
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+    outputs.upToDateWhen { false }
+}

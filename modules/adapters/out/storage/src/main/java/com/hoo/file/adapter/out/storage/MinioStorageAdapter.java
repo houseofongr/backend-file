@@ -1,6 +1,5 @@
 package com.hoo.file.adapter.out.storage;
 
-import com.hoo.common.enums.AccessLevel;
 import com.hoo.file.api.out.GenerateUrlPort;
 import com.hoo.file.api.out.StoreFilePort;
 import com.hoo.file.application.StorageProperties;
@@ -11,20 +10,11 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
-import io.minio.errors.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -63,21 +53,6 @@ public class MinioStorageAdapter implements StoreFilePort, GenerateUrlPort {
     @Override
     public URI generatePrivateUrl(File file) {
         return generateUrl(file, storageProperties.privateUrlExpireMin());
-    }
-
-    @Override
-    public Map<UUID, URI> generateUrlMap(List<File> files) {
-
-        Map<UUID, URI> urlMap = new HashMap<>();
-
-        for (File file : files) {
-            URI url = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC)?
-                    generatePublicUrl(file) :
-                    generatePrivateUrl(file);
-            urlMap.put(file.getId().uuid(), url);
-        }
-
-        return urlMap;
     }
 
     private URI generateUrl(File file, Integer hour) {

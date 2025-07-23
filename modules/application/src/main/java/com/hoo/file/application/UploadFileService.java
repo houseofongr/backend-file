@@ -2,11 +2,10 @@ package com.hoo.file.application;
 
 import com.hoo.common.IssueIDPort;
 import com.hoo.common.enums.AccessLevel;
-import com.hoo.common.internal.api.file.GetFileInfoAPI;
 import com.hoo.common.internal.api.file.UploadFileAPI;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
 import com.hoo.common.internal.api.file.dto.UploadFileResult;
-import com.hoo.file.api.out.GenerateUrlPort;
+import com.hoo.file.api.out.GetProxyUrlPort;
 import com.hoo.file.api.out.HandleFileEventPort;
 import com.hoo.file.api.out.StoreFilePort;
 import com.hoo.file.application.exception.ApplicationErrorCode;
@@ -30,7 +29,7 @@ public class UploadFileService implements UploadFileAPI {
     private final StorageProperties storageProperties;
     private final HandleFileEventPort handleFileEventPort;
     private final StoreFilePort storeFilePort;
-    private final GenerateUrlPort generateUrlPort;
+    private final GetProxyUrlPort getProxyUrlPort;
 
     @Override
     public UploadFileResult uploadFile(UploadFileCommand request) {
@@ -56,10 +55,9 @@ public class UploadFileService implements UploadFileAPI {
         storeFilePort.storeFile(file);
 
         URI url = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC)?
-                generateUrlPort.generatePublicUrl(file) : generateUrlPort.generatePrivateUrl(file);
+                getProxyUrlPort.getPublicUrl(file) : getProxyUrlPort.getPrivateUrl(file);
 
-        return new UploadFileResult(file.getId().uuid(), url, file.getFileDescriptor().createdTime().toEpochSecond()
-        );
+        return new UploadFileResult(file.getId().uuid(), url, file.getFileDescriptor().createdTime().toEpochSecond());
     }
 
     private String getBucketByContentType(String contentType) {

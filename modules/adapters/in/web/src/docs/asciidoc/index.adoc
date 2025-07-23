@@ -37,6 +37,16 @@ Sangyeop. Nam <spearoad15@gmail.com>
 
 operation::upload-file[snippets='http-request,request-parts,response-body,response-fields']
 
+[[download-file-api]]
+=== 파일 다운로드 API
+
+파일을 다운로드합니다.
+
+> 유효한 토큰일 경우 내부 파일 서버로 redirect되며, 해당 서버에서 다운로드가 진행됩니다.
+
+operation::download-file[snippets='http-request,path-parameters,response-headers']
+
+
 // ==========
 // 에러코드 API
 // ==========

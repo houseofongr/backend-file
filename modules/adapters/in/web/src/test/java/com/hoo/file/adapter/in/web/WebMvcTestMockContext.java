@@ -2,6 +2,7 @@ package com.hoo.file.adapter.in.web;
 
 import com.hoo.common.internal.api.file.GetFileInfoAPI;
 import com.hoo.common.internal.api.file.UploadFileAPI;
+import com.hoo.file.api.in.GetFileUrlUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,11 @@ import static org.mockito.Mockito.mock;
 @Configuration
 @ComponentScan(basePackages = "com.hoo.file.adapter.in.web")
 public class WebMvcTestMockContext {
+
+    @Bean
+    public GetFileUrlUseCase getFileUrlUseCase() {
+        return mock(GetFileUrlUseCase.class);
+    }
 
     @Bean
     public GetFileInfoAPI getFileInfoAPI() {

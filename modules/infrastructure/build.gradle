@@ -8,6 +8,7 @@ dependencies {
     implementation project(":modules:adapters:out:id-gen")
     implementation project(":modules:adapters:out:persistence")
     implementation project(":modules:adapters:out:storage")
+    implementation project(":modules:adapters:out:cache")
     implementation 'org.springframework.boot:spring-boot-starter'
 }
 

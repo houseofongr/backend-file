@@ -5,7 +5,7 @@ import com.hoo.common.internal.api.file.GetFileInfoAPI;
 import com.hoo.common.internal.api.file.dto.FileInfo;
 import com.hoo.common.internal.api.file.dto.GetFileInfoCommand;
 import com.hoo.common.internal.api.file.dto.GetFileInfoCommand.FileOwnership;
-import com.hoo.file.api.out.GenerateUrlPort;
+import com.hoo.file.api.out.GetProxyUrlPort;
 import com.hoo.file.api.out.LoadFilePort;
 import com.hoo.file.application.exception.ApplicationErrorCode;
 import com.hoo.file.application.exception.FileApplicationException;
@@ -23,18 +23,18 @@ import java.util.*;
 public class GetFileInfoService implements GetFileInfoAPI {
 
     private final LoadFilePort loadFilePort;
-    private final GenerateUrlPort generateUrlPort;
+    private final GetProxyUrlPort getProxyUrlPort;
     private final ApplicationMapper applicationMapper;
 
     @Override
     public List<FileInfo> getFileInfo(GetFileInfoCommand command) {
 
-        List<UUID> fileIDs = command.fileOwnershipList().stream().map(FileOwnership::fileID).toList();
+        List<UUID> fileIDs = command.fileOwners().stream().map(FileOwnership::fileID).toList();
         List<File> files = loadFilePort.loadAllFiles(fileIDs);
 
         validate(command, files);
 
-        Map<UUID, URI> fileUrls = generateUrlPort.generateUrlMap(files);
+        Map<UUID, URI> fileUrls = getProxyUrlPort.getUrlMap(files);
 
         return applicationMapper.mapToFileInfo(files, fileUrls);
     }
@@ -42,7 +42,7 @@ public class GetFileInfoService implements GetFileInfoAPI {
     private void validate(GetFileInfoCommand command, List<File> files) {
         for (File file : files) {
             if (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC) continue;
-            for (FileOwnership ownership : command.fileOwnershipList()) {
+            for (FileOwnership ownership : command.fileOwners()) {
                 if (file.getId().uuid() != ownership.fileID()) continue;
                 if (!file.getAccessControlInfo().ownerID().equals(ownership.ownerID()))
                     throw new FileApplicationException(ApplicationErrorCode.OWNERSHIP_REQUIRED);
