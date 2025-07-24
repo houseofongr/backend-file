@@ -1,6 +1,7 @@
 package com.hoo.file.application;
 
 import com.hoo.common.enums.AccessLevel;
+import com.hoo.common.enums.Domain;
 import com.hoo.file.api.out.CacheTempUrlPort;
 import com.hoo.file.api.out.GenerateUrlPort;
 import com.hoo.file.api.out.GetProxyUrlPort;
@@ -24,7 +25,7 @@ public class GetProxyUrlService implements GetProxyUrlPort {
     private final GenerateUrlPort generateUrlPort;
     private final CacheTempUrlPort cacheTempUrlPort;
     private final StorageProperties storageProperties;
-    private final ServerProperties serverProperties;
+    private final ExternalProperties externalProperties;
 
     @Override
     public URI getPublicUrl(File file) {
@@ -86,7 +87,7 @@ public class GetProxyUrlService implements GetProxyUrlPort {
     }
 
     private URI getTokenUrl(String token) {
-        return URI.create(serverProperties.baseUrl() + "/" + token);
+        return URI.create(externalProperties.domain() + "/" + Domain.FILE.getApiPath() + "/" + token);
     }
 
     private void validateToken(String token) {

@@ -26,12 +26,11 @@ public class MinioStorageAdapter implements StoreFilePort, GenerateUrlPort {
 
     @Override
     public void storeFile(File file) {
-
         try {
             ObjectWriteResponse response = minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(file.getLocation().bucket())
-                            .object(file.getLocation().storageKey())
+                            .object(file.getUrl())
                             .stream(file.getInputStream(), file.getFileDescriptor().size(), storageProperties.partSize())
                             .contentType(file.getMediaInfo().contentType())
                             .build()
@@ -69,7 +68,7 @@ public class MinioStorageAdapter implements StoreFilePort, GenerateUrlPort {
             return uri;
 
         } catch (Exception e) {
-            log.error("miniO file upload error occur!", e);
+            log.error("miniO file url create failed!", e);
             throw new FileAdapterException(AdapterErrorCode.GENERATE_URL_FAILED);
         }
     }

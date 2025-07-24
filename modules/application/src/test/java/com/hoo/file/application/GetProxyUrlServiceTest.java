@@ -21,9 +21,9 @@ class GetProxyUrlServiceTest {
     GenerateUrlPort generateUrlPort = mock();
     CacheTempUrlPort cacheTempUrlPort = mock();
     StorageProperties storageProperties = mock();
-    ServerProperties serverProperties = mock();
+    ExternalProperties externalProperties = mock();
 
-    GetProxyUrlService sut = new GetProxyUrlService(generateUrlPort, cacheTempUrlPort, storageProperties, serverProperties);
+    GetProxyUrlService sut = new GetProxyUrlService(generateUrlPort, cacheTempUrlPort, storageProperties, externalProperties);
 
     @Test
     @DisplayName("퍼블릭 URI 신규 발급")
@@ -33,7 +33,7 @@ class GetProxyUrlServiceTest {
 
         // when
         when(cacheTempUrlPort.loadToken(any())).thenReturn(Optional.empty());
-        when(serverProperties.baseUrl()).thenReturn("http://example.com/files");
+        when(externalProperties.baseUrl()).thenReturn("http://example.com/files");
         URI publicUrl = sut.getPublicUrl(file);
 
         // then
@@ -50,7 +50,7 @@ class GetProxyUrlServiceTest {
         String generatedKey = "fbcd947ebb8c3a89";
 
         // when
-        when(serverProperties.baseUrl()).thenReturn("http://example.com/files");
+        when(externalProperties.baseUrl()).thenReturn("http://example.com/files");
         when(cacheTempUrlPort.loadToken(any())).thenReturn(Optional.of(generatedKey));
         URI publicUrl = sut.getPublicUrl(file);
 
