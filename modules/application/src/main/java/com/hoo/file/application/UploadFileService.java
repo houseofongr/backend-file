@@ -5,7 +5,7 @@ import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.internal.api.file.UploadFileAPI;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
 import com.hoo.common.internal.api.file.dto.UploadFileResult;
-import com.hoo.file.api.out.GetProxyUrlPort;
+import com.hoo.file.api.out.GetProxyUrlInCase;
 import com.hoo.file.api.out.HandleFileEventPort;
 import com.hoo.file.api.out.StoreFilePort;
 import com.hoo.file.application.exception.ApplicationErrorCode;
@@ -26,10 +26,10 @@ import java.util.UUID;
 public class UploadFileService implements UploadFileAPI {
 
     private final IssueIDPort issueIDPort;
-    private final StorageProperties storageProperties;
     private final HandleFileEventPort handleFileEventPort;
     private final StoreFilePort storeFilePort;
-    private final GetProxyUrlPort getProxyUrlPort;
+    private final GetProxyUrlInCase getProxyUrlInCase;
+    private final ApplicationProperties applicationProperties;
 
     @Override
     public UploadFileResult uploadFile(UploadFileCommand request) {
@@ -55,7 +55,7 @@ public class UploadFileService implements UploadFileAPI {
         storeFilePort.storeFile(file);
 
         URI url = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC)?
-                getProxyUrlPort.getPublicUrl(file) : getProxyUrlPort.getPrivateUrl(file);
+                getProxyUrlInCase.getPublicUrl(file) : getProxyUrlInCase.getPrivateUrl(file);
 
         return new UploadFileResult(file.getId().uuid(), url, file.getFileDescriptor().createdTime().toEpochSecond());
     }
@@ -64,10 +64,10 @@ public class UploadFileService implements UploadFileAPI {
 
         switch (MediaInfo.of(contentType).mediaType()) {
             case DOCUMENTS -> {
-                return storageProperties.bucket().document();
+                return applicationProperties.bucket().document();
             }
             case IMAGES, AUDIOS, VIDEOS -> {
-                return storageProperties.bucket().media();
+                return applicationProperties.bucket().media();
             }
             default -> throw new FileApplicationException(ApplicationErrorCode.NOT_SUPPORTED_MEDIA_TYPE);
         }

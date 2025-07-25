@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface GetProxyUrlPort {
+public interface GetProxyUrlInCase {
     URI getPublicUrl(File file);
 
     URI getPrivateUrl(File file);

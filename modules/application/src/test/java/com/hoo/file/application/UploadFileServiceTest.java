@@ -4,7 +4,7 @@ import com.github.f4b6a3.uuid.UuidCreator;
 import com.hoo.common.IssueIDPort;
 import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
-import com.hoo.file.api.out.GetProxyUrlPort;
+import com.hoo.file.api.out.GetProxyUrlInCase;
 import com.hoo.file.api.out.HandleFileEventPort;
 import com.hoo.file.api.out.StoreFilePort;
 import com.hoo.file.domain.File;
@@ -22,9 +22,9 @@ class UploadFileServiceTest {
     StorageProperties storageProperties = mock();
     HandleFileEventPort handleFileEventPort = mock();
     StoreFilePort storeFilePort = mock();
-    GetProxyUrlPort getProxyUrlPort = mock();
+    GetProxyUrlInCase getProxyUrlInCase = mock();
 
-    UploadFileService sut = new UploadFileService(issueIDPort, storageProperties, handleFileEventPort, storeFilePort, getProxyUrlPort);
+    UploadFileService sut = new UploadFileService(issueIDPort, storageProperties, handleFileEventPort, storeFilePort, getProxyUrlInCase);
 
     @Test
     @DisplayName("파일 업로드 서비스")
@@ -45,7 +45,7 @@ class UploadFileServiceTest {
         // then
         verify(handleFileEventPort, times(1)).handleCreateFile(any());
         verify(storeFilePort, times(1)).storeFile(any());
-        verify(getProxyUrlPort, times(1)).getPublicUrl((File) any());
+        verify(getProxyUrlInCase, times(1)).getPublicUrl((File) any());
     }
 
 }

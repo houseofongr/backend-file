@@ -16,14 +16,14 @@ import static com.hoo.file.test.domain.FileTestData.defaultFile;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class GetProxyUrlServiceTest {
+class GetProxyUrlInServiceTest {
 
     GenerateUrlPort generateUrlPort = mock();
     CacheTempUrlPort cacheTempUrlPort = mock();
     StorageProperties storageProperties = mock();
-    ExternalProperties externalProperties = mock();
+    ApplicationProperties applicationProperties = mock();
 
-    GetProxyUrlService sut = new GetProxyUrlService(generateUrlPort, cacheTempUrlPort, storageProperties, externalProperties);
+    GetProxyUrlInService sut = new GetProxyUrlInService(generateUrlPort, cacheTempUrlPort, storageProperties, applicationProperties);
 
     @Test
     @DisplayName("퍼블릭 URI 신규 발급")
@@ -33,7 +33,7 @@ class GetProxyUrlServiceTest {
 
         // when
         when(cacheTempUrlPort.loadToken(any())).thenReturn(Optional.empty());
-        when(externalProperties.baseUrl()).thenReturn("http://example.com/files");
+        when(applicationProperties.baseUrl()).thenReturn("http://example.com/files");
         URI publicUrl = sut.getPublicUrl(file);
 
         // then
@@ -50,7 +50,7 @@ class GetProxyUrlServiceTest {
         String generatedKey = "fbcd947ebb8c3a89";
 
         // when
-        when(externalProperties.baseUrl()).thenReturn("http://example.com/files");
+        when(applicationProperties.baseUrl()).thenReturn("http://example.com/files");
         when(cacheTempUrlPort.loadToken(any())).thenReturn(Optional.of(generatedKey));
         URI publicUrl = sut.getPublicUrl(file);
 

@@ -2,7 +2,6 @@ package com.hoo.file.adapter.out.storage;
 
 import com.hoo.file.api.out.GenerateUrlPort;
 import com.hoo.file.api.out.StoreFilePort;
-import com.hoo.file.application.StorageProperties;
 import com.hoo.file.application.exception.AdapterErrorCode;
 import com.hoo.file.application.exception.FileAdapterException;
 import com.hoo.file.domain.File;

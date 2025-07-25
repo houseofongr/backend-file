@@ -64,6 +64,14 @@ public class File {
         return location.domain();
     }
 
+    public boolean isPublic() {
+        return accessControlInfo.accessLevel() == AccessLevel.PUBLIC;
+    }
+
+    public boolean isMine(UUID ownerID) {
+        return accessControlInfo.ownerID().equals(ownerID);
+    }
+
     public record FileID(UUID uuid) {
     }
 }

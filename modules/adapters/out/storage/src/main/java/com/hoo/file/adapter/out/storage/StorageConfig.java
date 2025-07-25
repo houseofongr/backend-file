@@ -1,6 +1,5 @@
 package com.hoo.file.adapter.out.storage;
 
-import com.hoo.file.application.StorageProperties;
 import io.minio.MinioClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

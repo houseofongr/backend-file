@@ -2,7 +2,6 @@ package com.hoo.file.adapter.out.cache;
 
 import com.hoo.common.enums.AccessLevel;
 import com.hoo.file.api.out.CacheTempUrlPort;
-import com.hoo.file.application.StorageProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

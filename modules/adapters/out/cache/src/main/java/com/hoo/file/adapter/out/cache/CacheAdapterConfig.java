@@ -1,6 +1,5 @@
 package com.hoo.file.adapter.out.cache;
 
-import com.hoo.file.application.StorageProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

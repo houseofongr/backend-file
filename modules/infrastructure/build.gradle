@@ -4,6 +4,7 @@ plugins {
 
 
 dependencies {
+    implementation project(":modules:application")
     implementation project(":modules:adapters:in:web")
     implementation project(":modules:adapters:out:id-gen")
     implementation project(":modules:adapters:out:persistence")

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class DownloadFileController {
+public class GetFileUrlController {
 
     private final GetFileUrlUseCase getFileUrlUseCase;
 

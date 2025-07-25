@@ -4,7 +4,7 @@ import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.enums.Domain;
 import com.hoo.file.api.out.CacheTempUrlPort;
 import com.hoo.file.api.out.GenerateUrlPort;
-import com.hoo.file.api.out.GetProxyUrlPort;
+import com.hoo.file.api.out.GetProxyUrlInCase;
 import com.hoo.file.application.exception.ApplicationErrorCode;
 import com.hoo.file.application.exception.FileApplicationException;
 import com.hoo.file.domain.File;
@@ -20,12 +20,11 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetProxyUrlService implements GetProxyUrlPort {
+public class GetProxyUrlInService implements GetProxyUrlInCase {
 
     private final GenerateUrlPort generateUrlPort;
     private final CacheTempUrlPort cacheTempUrlPort;
-    private final StorageProperties storageProperties;
-    private final ExternalProperties externalProperties;
+    private final ApplicationProperties applicationProperties;
 
     @Override
     public URI getPublicUrl(File file) {
@@ -83,11 +82,11 @@ public class GetProxyUrlService implements GetProxyUrlPort {
     }
 
     private URI getFileUrl(File file) {
-        return URI.create(storageProperties.endpoint() + "/" + file.getBucketIncludedUrl());
+        return URI.create(applicationProperties.fileServerEndpoint() + "/" + file.getBucketIncludedUrl());
     }
 
     private URI getTokenUrl(String token) {
-        return URI.create(externalProperties.domain() + "/" + Domain.FILE.getApiPath() + "/" + token);
+        return URI.create(applicationProperties.externalDomain() + "/" + Domain.FILE.getApiPath() + "/" + token);
     }
 
     private void validateToken(String token) {

@@ -14,7 +14,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class DownloadFileControllerTest extends DocumentationTest {
+class GetFileUrlControllerTest extends DocumentationTest {
 
     @Autowired
     private GetFileUrlUseCase getFileUrlUseCase;

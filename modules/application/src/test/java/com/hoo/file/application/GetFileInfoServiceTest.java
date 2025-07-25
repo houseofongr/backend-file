@@ -2,7 +2,7 @@ package com.hoo.file.application;
 
 import com.github.f4b6a3.uuid.UuidCreator;
 import com.hoo.common.internal.api.file.dto.GetFileInfoCommand;
-import com.hoo.file.api.out.GetProxyUrlPort;
+import com.hoo.file.api.out.GetProxyUrlInCase;
 import com.hoo.file.api.out.LoadFilePort;
 import com.hoo.file.test.domain.FileTestData;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +15,10 @@ import static org.mockito.Mockito.*;
 class GetFileInfoServiceTest {
 
     LoadFilePort loadFilePort = mock();
-    GetProxyUrlPort getProxyUrlPort = mock();
+    GetProxyUrlInCase getProxyUrlInCase = mock();
     ApplicationMapper applicationMapper = mock();
 
-    GetFileInfoService sut = new GetFileInfoService(loadFilePort, getProxyUrlPort, applicationMapper);
+    GetFileInfoService sut = new GetFileInfoService(loadFilePort, getProxyUrlInCase, applicationMapper);
 
     @Test
     @DisplayName("공개 파일정보 불러오기 서비스")
@@ -31,6 +31,6 @@ class GetFileInfoServiceTest {
         sut.getFileInfo(command);
 
         // then
-        verify(getProxyUrlPort, times(1)).getUrlMap(any());
+        verify(getProxyUrlInCase, times(1)).getUrlMap(any());
     }
 }
