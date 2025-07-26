@@ -1,6 +1,5 @@
-package com.hoo.file.adapter.in.web;
+package com.hoo.file.adapter.in.web.errorcode;
 
-import com.hoo.file.adapter.in.web.errorcode.ErrorResponse;
 import com.hoo.file.application.exception.FileAdapterException;
 import com.hoo.file.application.exception.FileApplicationException;
 import com.hoo.file.application.exception.FileDomainException;
