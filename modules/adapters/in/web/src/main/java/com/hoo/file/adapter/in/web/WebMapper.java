@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class RequestMapper {
+public class WebMapper {
 
     private final ObjectMapper objectMapper;
 

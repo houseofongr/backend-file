@@ -16,13 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadFileController {
 
     private final UploadFileAPI uploadFileAPI;
-    private final RequestMapper requestMapper;
+    private final WebMapper webMapper;
 
     @PostMapping("/files/upload")
     ResponseEntity<UploadFileResult> upload(
             @RequestParam(name = "file") MultipartFile file,
             @RequestParam(name = "metadata") String metadata) {
-        UploadFileCommand command = requestMapper.mapToUploadFileCommand(file, metadata);
+        UploadFileCommand command = webMapper.mapToUploadFileCommand(file, metadata);
         return new ResponseEntity<>(uploadFileAPI.uploadFile(command), HttpStatus.CREATED);
     }
 }
