@@ -9,16 +9,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories
 @EntityScan
-public class PersistenceAdapterConfig {
+public class PersistenceConfig {
 
     @Bean
-    public LoadFileAdapter loadFileAdapter(FileJpaRepository fileJpaRepository, PersistenceMapper persistenceMapper) {
-        return new LoadFileAdapter(fileJpaRepository, persistenceMapper);
+    public JpaQueryAdapter loadFileAdapter(FileJpaRepository fileJpaRepository, PersistenceMapper persistenceMapper) {
+        return new JpaQueryAdapter(fileJpaRepository, persistenceMapper);
     }
 
     @Bean
-    public HandleFileEventAdapter handleFileEventAdapter(FileJpaRepository fileJpaRepository) {
-        return new HandleFileEventAdapter(fileJpaRepository);
+    public JpaCommandAdapter handleFileEventAdapter(FileJpaRepository fileJpaRepository) {
+        return new JpaCommandAdapter(fileJpaRepository);
     }
 
     @Bean

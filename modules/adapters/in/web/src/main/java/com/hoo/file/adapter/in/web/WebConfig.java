@@ -6,16 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class WebAdapterConfig {
+public class WebConfig {
 
     @Bean
     RequestMapper requestMapper(ObjectMapper webObjectMapper) {
         return new RequestMapper(webObjectMapper);
     }
 
-    @Primary
-    @Bean("webObjectMapper")
-    ObjectMapper objectMapper() {
+    @Bean
+    ObjectMapper webObjectMapper() {
         return new ObjectMapper();
     }
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 import static com.hoo.common.enums.CacheKeys.*;
 
 @RequiredArgsConstructor
-public class RedisCacheAdapter implements CacheTempUrlPort {
+public class RedisAdapter implements CacheTempUrlPort {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final StorageProperties storageProperties;

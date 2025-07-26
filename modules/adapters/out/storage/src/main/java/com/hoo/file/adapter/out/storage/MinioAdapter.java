@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
-public class MinioStorageAdapter implements StoreFilePort, GenerateUrlPort {
+public class MinioAdapter implements StoreFilePort, GenerateUrlPort {
 
     private final MinioClient minioClient;
     private final StorageProperties storageProperties;

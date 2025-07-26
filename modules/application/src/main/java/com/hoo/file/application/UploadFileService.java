@@ -1,12 +1,11 @@
 package com.hoo.file.application;
 
 import com.hoo.common.IssueIDPort;
-import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.internal.api.file.UploadFileAPI;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
 import com.hoo.common.internal.api.file.dto.UploadFileResult;
 import com.hoo.file.api.out.GetProxyUrlInCase;
-import com.hoo.file.api.out.HandleFileEventPort;
+import com.hoo.file.api.out.SaveFilePort;
 import com.hoo.file.api.out.StoreFilePort;
 import com.hoo.file.application.exception.ApplicationErrorCode;
 import com.hoo.file.application.exception.FileApplicationException;
@@ -26,7 +25,7 @@ import java.util.UUID;
 public class UploadFileService implements UploadFileAPI {
 
     private final IssueIDPort issueIDPort;
-    private final HandleFileEventPort handleFileEventPort;
+    private final SaveFilePort saveFilePort;
     private final StoreFilePort storeFilePort;
     private final GetProxyUrlInCase getProxyUrlInCase;
     private final ApplicationProperties applicationProperties;
@@ -48,15 +47,15 @@ public class UploadFileService implements UploadFileAPI {
                 request.metadata().accessLevel()
         );
 
-        File file = event.newFile();
-        file.addInputStream(request.fileSource().inputStream());
+        File newFile = event.newFile();
+        newFile.addInputStream(request.fileSource().inputStream());
 
-        handleFileEventPort.handleCreateFile(event);
-        storeFilePort.storeFile(file);
+        saveFilePort.saveFile(newFile);
+        storeFilePort.storeFile(newFile);
 
-        URI url = getProxyUrlInCase.getProxyUrl(file);
+        URI url = getProxyUrlInCase.getProxyUrl(newFile);
 
-        return new UploadFileResult(file.getId().uuid(), url, file.getFileDescriptor().createdTime().toEpochSecond());
+        return new UploadFileResult(newFile.getId().uuid(), url, newFile.getFileDescriptor().createdTime().toEpochSecond());
     }
 
     private String getBucketByContentType(String contentType) {

@@ -2,7 +2,6 @@ package com.hoo.file.adapter.out.persistence;
 
 import com.hoo.file.adapter.out.persistence.repository.FileJpaRepository;
 import com.hoo.file.domain.File;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Sql("classpath:sql/file.sql")
 @PersistenceAdapterTest
-class LoadFileAdapterTest {
+class JpaQueryAdapterTest {
 
     @Autowired
-    LoadFileAdapter sut;
+    JpaQueryAdapter sut;
 
     @Autowired
     FileJpaRepository fileJpaRepository;

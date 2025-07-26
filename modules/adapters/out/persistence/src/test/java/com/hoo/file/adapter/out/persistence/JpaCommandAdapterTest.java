@@ -14,23 +14,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Sql("classpath:sql/file.sql")
 @PersistenceAdapterTest
-class HandleFileEventAdapterTest {
+class JpaCommandAdapterTest {
 
     @Autowired
-    HandleFileEventAdapter sut;
+    JpaCommandAdapter sut;
 
     @Autowired
     FileJpaRepository fileJpaRepository;
 
     @Test
     @DisplayName("파일 생성 이벤트 처리")
-    void handleCreateFile() {
+    void saveFile() {
         // given
         FileCreateEvent event = new FileCreateEvent(defaultFile().build());
         UUID fileID = event.newFile().getId().uuid();
 
         // when
-        sut.handleCreateFile(event);
+        sut.saveFile(event.newFile());
 
         // then
         assertThat(fileJpaRepository.findByUuid(fileID)).isPresent();

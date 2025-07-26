@@ -5,9 +5,8 @@ import com.hoo.common.IssueIDPort;
 import com.hoo.common.enums.AccessLevel;
 import com.hoo.common.internal.api.file.dto.UploadFileCommand;
 import com.hoo.file.api.out.GetProxyUrlInCase;
-import com.hoo.file.api.out.HandleFileEventPort;
+import com.hoo.file.api.out.SaveFilePort;
 import com.hoo.file.api.out.StoreFilePort;
-import com.hoo.file.domain.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,12 +18,12 @@ import static org.mockito.Mockito.*;
 class UploadFileServiceTest {
 
     IssueIDPort issueIDPort = mock();
-    HandleFileEventPort handleFileEventPort = mock();
+    SaveFilePort saveFilePort = mock();
     StoreFilePort storeFilePort = mock();
     GetProxyUrlInCase getProxyUrlInCase = mock();
     ApplicationProperties applicationProperties = mock();
 
-    UploadFileService sut = new UploadFileService(issueIDPort, handleFileEventPort, storeFilePort, getProxyUrlInCase, applicationProperties);
+    UploadFileService sut = new UploadFileService(issueIDPort, saveFilePort, storeFilePort, getProxyUrlInCase, applicationProperties);
 
     @Test
     @DisplayName("파일 업로드 서비스")
@@ -43,7 +42,7 @@ class UploadFileServiceTest {
         sut.uploadFile(command);
 
         // then
-        verify(handleFileEventPort, times(1)).handleCreateFile(any());
+        verify(saveFilePort, times(1)).saveFile(any());
         verify(storeFilePort, times(1)).storeFile(any());
         verify(getProxyUrlInCase, times(1)).getProxyUrl(any());
     }

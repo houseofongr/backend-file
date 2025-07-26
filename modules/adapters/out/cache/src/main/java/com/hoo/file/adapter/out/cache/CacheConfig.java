@@ -9,14 +9,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableConfigurationProperties(StorageProperties.class)
-public class CacheAdapterConfig {
+public class CacheConfig {
 
     @Bean
-    public RedisCacheAdapter redisCacheAdapter(
+    public RedisAdapter redisCacheAdapter(
             RedisTemplate<String, String> redisTemplate,
             StorageProperties storageProperties
     ) {
-        return new RedisCacheAdapter(redisTemplate, storageProperties);
+        return new RedisAdapter(redisTemplate, storageProperties);
     }
 
     @Bean

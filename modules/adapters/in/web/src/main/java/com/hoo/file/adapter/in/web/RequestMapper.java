@@ -17,7 +17,6 @@ public class RequestMapper {
     private final ObjectMapper objectMapper;
 
     public UploadFileCommand mapToUploadFileCommand(MultipartFile file, String metadata) {
-
         if (file == null) return null;
 
         try {
@@ -37,7 +36,6 @@ public class RequestMapper {
     }
 
     public UploadFileCommand.Metadata mapToUploadFileMetadata(String metadata) {
-
         try {
             return objectMapper.readValue(metadata, new TypeReference<>() {
             });

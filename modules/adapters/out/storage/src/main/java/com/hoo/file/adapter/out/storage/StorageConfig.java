@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration;
 public class StorageConfig {
 
     @Bean
-    public MinioStorageAdapter minioStorageAdapter(
+    public MinioAdapter minioStorageAdapter(
             MinioClient minioClient,
             StorageProperties storageProperties) {
 
-        return new MinioStorageAdapter(minioClient, storageProperties);
+        return new MinioAdapter(minioClient, storageProperties);
     }
 
     @Bean

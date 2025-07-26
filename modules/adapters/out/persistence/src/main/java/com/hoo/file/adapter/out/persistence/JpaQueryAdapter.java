@@ -13,25 +13,21 @@ import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class LoadFileAdapter implements LoadFilePort {
+public class JpaQueryAdapter implements LoadFilePort {
 
     private final FileJpaRepository fileJpaRepository;
     private final PersistenceMapper persistenceMapper;
 
     @Override
     public File loadFile(UUID fileID) {
-
         FileJpaEntity fileJpaEntity = fileJpaRepository.findByUuid(fileID)
                 .orElseThrow(() -> new FileAdapterException(AdapterErrorCode.FILE_NOT_FOUND));
-
         return persistenceMapper.mapToFile(fileJpaEntity);
     }
 
     @Override
     public List<File> loadAllFiles(Collection<UUID> fileIDs) {
-
         List<FileJpaEntity> fileJpaEntities = fileJpaRepository.findByUuidIn(fileIDs);
-
         return fileJpaEntities.stream().map(persistenceMapper::mapToFile).toList();
     }
 }

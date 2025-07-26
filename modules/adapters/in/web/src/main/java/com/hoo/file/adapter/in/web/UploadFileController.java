@@ -22,9 +22,7 @@ public class UploadFileController {
     ResponseEntity<UploadFileResult> upload(
             @RequestParam(name = "file") MultipartFile file,
             @RequestParam(name = "metadata") String metadata) {
-
         UploadFileCommand command = requestMapper.mapToUploadFileCommand(file, metadata);
-
         return new ResponseEntity<>(uploadFileAPI.uploadFile(command), HttpStatus.CREATED);
     }
 }
