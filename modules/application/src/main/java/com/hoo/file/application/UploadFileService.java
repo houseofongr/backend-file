@@ -54,8 +54,7 @@ public class UploadFileService implements UploadFileAPI {
         handleFileEventPort.handleCreateFile(event);
         storeFilePort.storeFile(file);
 
-        URI url = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC)?
-                getProxyUrlInCase.getPublicUrl(file) : getProxyUrlInCase.getPrivateUrl(file);
+        URI url = getProxyUrlInCase.getProxyUrl(file);
 
         return new UploadFileResult(file.getId().uuid(), url, file.getFileDescriptor().createdTime().toEpochSecond());
     }

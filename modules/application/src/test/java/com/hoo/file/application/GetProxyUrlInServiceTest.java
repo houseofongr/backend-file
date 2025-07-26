@@ -20,42 +20,61 @@ class GetProxyUrlInServiceTest {
 
     GenerateUrlPort generateUrlPort = mock();
     CacheTempUrlPort cacheTempUrlPort = mock();
-    StorageProperties storageProperties = mock();
     ApplicationProperties applicationProperties = mock();
 
-    GetProxyUrlInService sut = new GetProxyUrlInService(generateUrlPort, cacheTempUrlPort, storageProperties, applicationProperties);
+    GetProxyUrlInService sut = new GetProxyUrlInService(generateUrlPort, cacheTempUrlPort, applicationProperties);
 
     @Test
     @DisplayName("퍼블릭 URI 신규 발급")
-    void generateTempUrl() {
+    void generatePublicUrl() {
         // given
         File file = defaultFile().build();
+        String fileDomain = "http://file.domain";
+        String storageDomain = "http://minio.domain";
 
         // when
         when(cacheTempUrlPort.loadToken(any())).thenReturn(Optional.empty());
-        when(applicationProperties.baseUrl()).thenReturn("http://example.com/files");
-        URI publicUrl = sut.getPublicUrl(file);
+        when(generateUrlPort.generatePublicUrl(any())).thenReturn(URI.create(storageDomain + "/media/test.png"));
+        when(applicationProperties.gatewayEndpoint()).thenReturn(fileDomain);
+        URI publicUrl = sut.getProxyUrl(file);
 
         // then
         verify(generateUrlPort, times(1)).generatePublicUrl(any());
         verify(cacheTempUrlPort, times(1)).cacheUrl(any(), any(), any());
-        assertThat(publicUrl.toString()).contains("http://example.com/files/");
+        assertThat(publicUrl.toString()).contains(fileDomain);
     }
 
     @Test
     @DisplayName("퍼블릭 URI 캐시 발급")
-    void getTempUrl() {
+    void getPublicUrlByCache() {
         // given
         File file = defaultFile().build();
         String generatedKey = "fbcd947ebb8c3a89";
+        String fileDomain = "http://file.domain";
 
         // when
-        when(applicationProperties.baseUrl()).thenReturn("http://example.com/files");
         when(cacheTempUrlPort.loadToken(any())).thenReturn(Optional.of(generatedKey));
-        URI publicUrl = sut.getPublicUrl(file);
+        when(applicationProperties.gatewayEndpoint()).thenReturn(fileDomain);
+        URI publicUrl = sut.getProxyUrl(file);
 
         // then
-        assertThat(publicUrl.toString()).isEqualTo("http://example.com/files/fbcd947ebb8c3a89");
+        assertThat(publicUrl.toString()).isEqualTo(fileDomain + "/files/" + generatedKey);
+    }
+    
+    @Test
+    @DisplayName("토큰으로부터 실제 URL 발급")
+    void getRealFileUrl() {
+        // given
+        String token = "abcd1234";
+        String storageDomain = "http://minio.domain";
+
+        // when
+        when(cacheTempUrlPort.loadUrl(token)).thenReturn(Optional.of(URI.create(storageDomain + "/files/123")));
+        when(applicationProperties.storageEndpoint()).thenReturn(storageDomain);
+        URI realFileUrl = sut.getRealFileUrl(token);
+
+        // then
+        assertThat(realFileUrl.toString()).contains(storageDomain);
     }
 
     @Nested
@@ -65,7 +84,7 @@ class GetProxyUrlInServiceTest {
         @Test
         @DisplayName("토큰이 16진수가 아님")
         void tokenNotHex() {
-            assertThatThrownBy(() -> sut.getTempUrl("xyz123"))
+            assertThatThrownBy(() -> sut.getRealFileUrl("xyz123"))
                     .isInstanceOf(FileApplicationException.class)
                     .hasMessage(ApplicationErrorCode.BAD_FILE_TOKEN_URL.getMessage());
         }
@@ -73,7 +92,7 @@ class GetProxyUrlInServiceTest {
         @Test
         @DisplayName("토큰이 null")
         void uriIsNull() {
-            assertThatThrownBy(() -> sut.getTempUrl(null))
+            assertThatThrownBy(() -> sut.getRealFileUrl(null))
                     .isInstanceOf(FileApplicationException.class)
                     .hasMessage(ApplicationErrorCode.BAD_FILE_TOKEN_URL.getMessage());
         }

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.security.SecureRandom;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -26,37 +25,24 @@ public class GetProxyUrlInService implements GetProxyUrlInCase {
     private final CacheTempUrlPort cacheTempUrlPort;
     private final ApplicationProperties applicationProperties;
 
-    @Override
-    public URI getPublicUrl(File file) {
 
-        Optional<String> key = cacheTempUrlPort.loadToken(getFileUrl(file));
+    @Override
+    public URI getProxyUrl(File file) {
+        Optional<String> key = cacheTempUrlPort.loadToken(getRealFileUrl(file));
 
         if (key.isPresent()) return getTokenUrl(key.get());
 
-        URI generated = generateUrlPort.generatePublicUrl(file);
-        String token = generateRandomToken();
-        cacheTempUrlPort.cacheUrl(token, generated, file.getAccessControlInfo().accessLevel());
+        URI realUrl = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC) ?
+                generateUrlPort.generatePublicUrl(file) : generateUrlPort.generatePrivateUrl(file);
+        String token = file.generateRandomToken();
+
+        cacheTempUrlPort.cacheUrl(token, realUrl, file.getAccessControlInfo().accessLevel());
 
         return getTokenUrl(token);
     }
 
     @Override
-    public URI getPrivateUrl(File file) {
-
-        Optional<String> key = cacheTempUrlPort.loadToken(getFileUrl(file));
-
-        if (key.isPresent()) return getTokenUrl(key.get());
-
-        URI generated = generateUrlPort.generatePrivateUrl(file);
-        String token = generateRandomToken();
-        cacheTempUrlPort.cacheUrl(token, generated, file.getAccessControlInfo().accessLevel());
-
-        return getTokenUrl(token);
-    }
-
-    @Override
-    public URI getTempUrl(String token) {
-
+    public URI getRealFileUrl(String token) {
         validateToken(token);
 
         URI loadedUrl = cacheTempUrlPort.loadUrl(token)
@@ -69,34 +55,25 @@ public class GetProxyUrlInService implements GetProxyUrlInCase {
 
     @Override
     public Map<UUID, URI> getUrlMap(List<File> files) {
-
         Map<UUID, URI> urlMap = new HashMap<>();
 
         for (File file : files) {
-            URI url = (file.getAccessControlInfo().accessLevel() == AccessLevel.PUBLIC) ?
-                    getPublicUrl(file) : getPrivateUrl(file);
-            urlMap.put(file.getId().uuid(), url);
+            urlMap.put(file.getId().uuid(), getProxyUrl(file));
         }
 
         return urlMap;
     }
 
-    private URI getFileUrl(File file) {
-        return URI.create(applicationProperties.fileServerEndpoint() + "/" + file.getBucketIncludedUrl());
+    private URI getRealFileUrl(File file) {
+        return URI.create(applicationProperties.storageEndpoint() + "/" + file.getBucketIncludedUrl());
     }
 
     private URI getTokenUrl(String token) {
-        return URI.create(applicationProperties.externalDomain() + "/" + Domain.FILE.getApiPath() + "/" + token);
+        return URI.create(applicationProperties.gatewayEndpoint() + "/" + Domain.FILE.getApiPath() + "/" + token);
     }
 
     private void validateToken(String token) {
-
-        if (!Pattern.compile("^-?[0-9a-f]+$").matcher(token).matches())
+        if (token == null || token.isBlank() || !Pattern.compile("^-?[0-9a-f]+$").matcher(token).matches())
             throw new FileApplicationException(ApplicationErrorCode.BAD_FILE_TOKEN_URL);
-    }
-
-    private String generateRandomToken() {
-        SecureRandom random = new SecureRandom();
-        return Long.toHexString(random.nextLong());
     }
 }

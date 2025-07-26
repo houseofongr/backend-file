@@ -13,6 +13,6 @@ public class GetFileUrlService implements GetFileUrlUseCase {
 
     @Override
     public String getTempUrl(String token) {
-        return getProxyUrlInCase.getTempUrl(token).toString();
+        return getProxyUrlInCase.getRealFileUrl(token).toString();
     }
 }

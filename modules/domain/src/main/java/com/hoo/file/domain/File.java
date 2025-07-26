@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.InputStream;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 @Getter
@@ -70,6 +71,11 @@ public class File {
 
     public boolean isMine(UUID ownerID) {
         return accessControlInfo.ownerID().equals(ownerID);
+    }
+
+    public String generateRandomToken() {
+        SecureRandom random = new SecureRandom();
+        return Long.toHexString(random.nextLong());
     }
 
     public record FileID(UUID uuid) {

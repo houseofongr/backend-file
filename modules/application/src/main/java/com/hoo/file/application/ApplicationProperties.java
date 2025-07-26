@@ -4,8 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "application")
 public record ApplicationProperties(
-        String externalDomain,
-        String fileServerEndpoint,
+        String storageEndpoint,
+        String gatewayEndpoint,
         Bucket bucket
 ) {
 

@@ -19,12 +19,12 @@ import static org.mockito.Mockito.*;
 class UploadFileServiceTest {
 
     IssueIDPort issueIDPort = mock();
-    StorageProperties storageProperties = mock();
     HandleFileEventPort handleFileEventPort = mock();
     StoreFilePort storeFilePort = mock();
     GetProxyUrlInCase getProxyUrlInCase = mock();
+    ApplicationProperties applicationProperties = mock();
 
-    UploadFileService sut = new UploadFileService(issueIDPort, storageProperties, handleFileEventPort, storeFilePort, getProxyUrlInCase);
+    UploadFileService sut = new UploadFileService(issueIDPort, handleFileEventPort, storeFilePort, getProxyUrlInCase, applicationProperties);
 
     @Test
     @DisplayName("파일 업로드 서비스")
@@ -39,13 +39,13 @@ class UploadFileServiceTest {
 
         // when
         when(issueIDPort.issueNewID()).thenReturn(newFileID);
-        when(storageProperties.bucket()).thenReturn(new StorageProperties.Buckets("media", "document", "log", "backup"));
+        when(applicationProperties.bucket()).thenReturn(new ApplicationProperties.Bucket("media", "document"));
         sut.uploadFile(command);
 
         // then
         verify(handleFileEventPort, times(1)).handleCreateFile(any());
         verify(storeFilePort, times(1)).storeFile(any());
-        verify(getProxyUrlInCase, times(1)).getPublicUrl((File) any());
+        verify(getProxyUrlInCase, times(1)).getProxyUrl(any());
     }
 
 }

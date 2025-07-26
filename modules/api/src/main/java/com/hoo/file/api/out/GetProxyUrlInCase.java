@@ -8,11 +8,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface GetProxyUrlInCase {
-    URI getPublicUrl(File file);
+    URI getProxyUrl(File file);
 
-    URI getPrivateUrl(File file);
-
-    URI getTempUrl(String token);
+    URI getRealFileUrl(String token);
 
     Map<UUID, URI> getUrlMap(List<File> files);
 }
